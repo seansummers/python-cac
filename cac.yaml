@@ -241,24 +241,34 @@ paths:
         - $ref: "#/parameters/loginParam"
         - name: cpu
           in: formData
-          description: "CPU from 1..16"
+          description: "vCPUs to allocate"
           required: true
-          type: string
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 16
         - name: ram
           in: formData
-          description: "Ram from 512..32768, multiple of 4"
+          description: "RAM to allocate, multiple of 4"
           required: true
-          type: string
+          type: integer
+          format: int32
+          minimum: 512
+          maximum: 32768
         - name: storage
           in: formData
-          description: "GB from 10 to 1000, multiple of 5"
+          description: "GB storage to allocate, multiple of 5?"
           required: true
-          type: string
+          type: integer
+          format: int32
+          minimum: 10
+          maximum: 1000
         - name: os
           in: formData
           description: "OS Template from listtemplates"
           required: true
-          type: string
+          type: integer
+          format: int32
       responses:
         200:
           description: Successful response
@@ -271,6 +281,7 @@ parameters:
     description: API KEY
     required: true
     type: string
+    format: password
   loginParam:
     name: login
     in: query
