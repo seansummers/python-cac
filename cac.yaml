@@ -1,0 +1,445 @@
+swagger: '2.0'
+info:
+  version: "1.0.0"
+  title: cloudatcost.com API
+host: panel.cloudatcost.com
+basePath: /api/v1
+schemes:
+  - https
+produces:
+  - application/json
+paths:
+  /listservers.php:
+    get:
+      description: List all servers on the account
+      operationId: servers
+      parameters:
+        - $ref: "#/parameters/keyParam"
+        - $ref: "#/parameters/loginParam"
+      responses:
+        200:
+          description: Successful response
+          schema:
+            properties:
+              status:
+                type: string
+              time:
+                type: integer
+                format: int32
+              api:
+                type: string
+              action:
+                type: string
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/Server"
+  /listtemplates.php:
+    get:
+      description: List all templates available
+      operationId: templates
+      parameters:
+        - $ref: "#/parameters/keyParam"
+        - $ref: "#/parameters/loginParam"
+      responses:
+        200:
+          description: Successful response
+          schema:
+            properties:
+              status:
+                type: string
+              time:
+                type: integer
+                format: int32
+              api:
+                type: string
+              action:
+                type: string
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/Template"
+  /listtasks.php:
+    get:
+      description: List all tasks in operation
+      operationId: tasks
+      parameters:
+        - $ref: "#/parameters/keyParam"
+        - $ref: "#/parameters/loginParam"
+      responses:
+        200:
+          description: Successful response
+          schema:
+            properties:
+              status:
+                type: string
+              time:
+                type: integer
+                format: int32
+              api:
+                type: string
+              cid:
+                type: string
+              action:
+                type: string
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/Task"
+  /cloudpro/resources.php:
+    get:
+      description: Display resources available and resources used in cloud-pro
+      operationId: resources
+      parameters:
+        - $ref: "#/parameters/keyParam"
+        - $ref: "#/parameters/loginParam"
+      responses:
+        200:
+          description: Successful response
+          schema:
+            properties:
+              status:
+                type: string
+              time:
+                type: integer
+                format: int32
+              api:
+                type: string
+              action:
+                type: string
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/Resources"
+  /powerop.php:
+    post:
+      description: Activate server power operations
+      operationId: power
+      parameters:
+        - $ref: "#/parameters/keyParam"
+        - $ref: "#/parameters/loginParam"
+        - $ref: "#/parameters/sidParam"
+        - $ref: "#/parameters/powerOpActionParam"
+      responses:
+        200:
+          description: Successful response
+          schema:
+            properties:
+              status:
+                type: string
+              time:
+                type: integer
+                format: int32
+              api:
+                type: string
+              serverid:
+                type: string
+              action:
+                type: string
+              taskid:
+                type: integer
+                format: int64
+              result:
+                type: string
+  /runmode.php:
+    post:
+      description: Set the run mode of the server to either 'normal' or 'safe'. Safe automatically turns off the server after 7 days of idle usage. Normal keeps it on indefinitely.
+      operationId: runMode
+      parameters:
+        - $ref: "#/parameters/keyParam"
+        - $ref: "#/parameters/loginParam"
+        - $ref: "#/parameters/sidParam"
+        - $ref: "#/parameters/runModeParam"
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/SuccessfulResponse"
+  /renameserver.php:
+    post:
+      description: Rename the server label
+      operationId: rename
+      parameters:
+        - $ref: "#/parameters/keyParam"
+        - $ref: "#/parameters/loginParam"
+        - $ref: "#/parameters/sidParam"
+        - $ref: "#/parameters/nameParam"
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/SuccessfulResponse"
+  /rdns.php:
+    post:
+      description: Modify the reverse DNS & hostname of the VPS
+      operationId: rdns
+      parameters:
+        - $ref: "#/parameters/keyParam"
+        - $ref: "#/parameters/loginParam"
+        - $ref: "#/parameters/sidParam"
+        - $ref: "#/parameters/hostnameParam"
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/SuccessfulResponse"
+  /console.php:
+    post:
+      description: Request URL for console access
+      operationId: console
+      parameters:
+        - $ref: "#/parameters/keyParam"
+        - $ref: "#/parameters/loginParam"
+        - $ref: "#/parameters/sidParam"
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/ConsoleResponse"
+  /cloudpro/delete.php:
+    post:
+      description: Delete / terminate server to add resources
+      operationId: delete
+      parameters:
+        - $ref: "#/parameters/keyParam"
+        - $ref: "#/parameters/loginParam"
+        - $ref: "#/parameters/sidParam"
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/CloudProResponse"
+  /cloudpro/build.php:
+    post:
+      description: Build a server from available resources
+      operationId: build
+      parameters:
+        - $ref: "#/parameters/keyParam"
+        - $ref: "#/parameters/loginParam"
+        - name: cpu
+          in: formData
+          description: "CPU from 1..16"
+          required: true
+          type: string
+        - name: ram
+          in: formData
+          description: "Ram from 512..32768, multiple of 4"
+          required: true
+          type: string
+        - name: storage
+          in: formData
+          description: "GB from 10 to 1000, multiple of 5"
+          required: true
+          type: string
+        - name: os
+          in: formData
+          description: "OS Template from listtemplates"
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/CloudProResponse"
+parameters:
+  keyParam:
+    name: key
+    in: query
+    description: API KEY
+    required: true
+    type: string
+  loginParam:
+    name: login
+    in: query
+    description: Login Email
+    required: true
+    type: string
+  sidParam:
+    name: sid
+    in: formData
+    description: SERVERID
+    required: true
+    type: string
+  powerOpActionParam:
+    name: action
+    in: formData
+    description: Power Action
+    required: true
+    type: string
+    enum: ["poweron", "poweroff", "reset"]
+  runModeParam:
+    name: mode
+    in: formData
+    description: Run Mode
+    required: true
+    type: string
+    enum: ["normal", "safe"]
+  nameParam:
+    name: name
+    in: formData
+    description: Server Name
+    required: true
+    type: string
+  hostnameParam:
+    name: hostname
+    in: formData
+    description: Host Name
+    required: true
+    type: string
+definitions:
+  Server:
+    properties:
+      sid:
+        type: string
+      id:
+        type: string
+      packageid:
+        type: string
+      servername:
+        type: string
+      lable:
+        type: string
+      label:
+        type: string
+      vmname:
+        type: string
+      ip:
+        type: string
+      netmask:
+        type: string
+      gateway:
+        type: string
+      portgroup:
+        type: string
+      hostname:
+        type: string
+      rootpass:
+        type: string
+      vncport:
+        type: string
+      vncpass:
+        type: string
+      servertype:
+        type: string
+      template:
+        type: string
+      cpu:
+        type: string
+      cpuusage:
+        type: string
+      ram:
+        type: string
+      ramusage:
+        type: string
+      storage:
+        type: string
+      hdusage:
+        type: string
+      sdate:
+        type: string
+      status:
+        type: string
+      panel_note:
+        type: string
+      mode:
+        type: string
+      uid:
+        type: string
+      rdns:
+        type: string
+      rdnsdefault:
+        type: string
+  Template:
+    properties:
+      ce_id:
+        type: string
+      name:
+        type: string
+  Task:
+    properties:
+      cid:
+        type: string
+      idf:
+        type: string
+      serverid:
+        type: string
+      action:
+        type: string
+      status:
+        type: string
+      starttime:
+        type: string
+      finishtime:
+        type: string
+      servername:
+        type: string
+      ip:
+        type: string
+      label:
+        type: string
+      rdns:
+        type: string
+      rdnsdefault:
+        type: string
+  Resources:
+    properties:
+      total:
+        type: object
+        properties:
+          cpu_total:
+            type: string
+          ram_total:
+            type: string
+          storage_total:
+            type: string
+      used:
+        type: object
+        properties:
+          cpu_used:
+            type: string
+          ram_used:
+            type: string
+          storage_used:
+            type: string
+  SuccessfulResponse:
+    properties:
+      status:
+        type: string
+      time:
+        type: integer
+        format: int32
+      api:
+        type: string
+      serverid:
+        type: string
+      result:
+        type: string
+  ConsoleResponse:
+    properties:
+      status:
+        type: string
+      time:
+        type: integer
+        format: int32
+      api:
+        type: string
+      serverid:
+        type: string
+      console:
+        type: string
+  CloudProResponse:
+    properties:
+      status:
+        type: string
+      time:
+        type: integer
+        format: int32
+      api:
+        type: string
+      action:
+        type: string
+      taskid:
+        type: integer
+        format: int64
+      result:
+        type: string
