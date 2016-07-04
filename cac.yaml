@@ -119,7 +119,15 @@ paths:
         - $ref: "#/parameters/keyParam"
         - $ref: "#/parameters/loginParam"
         - $ref: "#/parameters/sidParam"
-        - $ref: "#/parameters/powerOpActionParam"
+        - name: action
+          in: formData
+          description: Power Action
+          required: true
+          type: string
+          enum:
+            - poweron
+            - poweroff
+            - reset
       responses:
         200:
           description: Successful response
@@ -149,7 +157,14 @@ paths:
         - $ref: "#/parameters/keyParam"
         - $ref: "#/parameters/loginParam"
         - $ref: "#/parameters/sidParam"
-        - $ref: "#/parameters/runModeParam"
+        - name: mode
+          in: formData
+          description: Run Mode
+          required: true
+          type: string
+          enum:
+            - normal
+            - safe
       responses:
         200:
           description: Successful response
@@ -163,7 +178,11 @@ paths:
         - $ref: "#/parameters/keyParam"
         - $ref: "#/parameters/loginParam"
         - $ref: "#/parameters/sidParam"
-        - $ref: "#/parameters/nameParam"
+        - name: name
+          in: formData
+          description: Server Name
+          required: true
+          type: string
       responses:
         200:
           description: Successful response
@@ -177,7 +196,11 @@ paths:
         - $ref: "#/parameters/keyParam"
         - $ref: "#/parameters/loginParam"
         - $ref: "#/parameters/sidParam"
-        - $ref: "#/parameters/hostnameParam"
+        - name: hostname
+          in: formData
+          description: Host Name
+          required: true
+          type: string
       responses:
         200:
           description: Successful response
@@ -258,32 +281,6 @@ parameters:
     name: sid
     in: formData
     description: SERVERID
-    required: true
-    type: string
-  powerOpActionParam:
-    name: action
-    in: formData
-    description: Power Action
-    required: true
-    type: string
-    enum: ["poweron", "poweroff", "reset"]
-  runModeParam:
-    name: mode
-    in: formData
-    description: Run Mode
-    required: true
-    type: string
-    enum: ["normal", "safe"]
-  nameParam:
-    name: name
-    in: formData
-    description: Server Name
-    required: true
-    type: string
-  hostnameParam:
-    name: hostname
-    in: formData
-    description: Host Name
     required: true
     type: string
 definitions:
